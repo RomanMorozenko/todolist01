@@ -1,15 +1,19 @@
 import React, {useState} from 'react';
+import {TodoList} from "./components/TodoList";
 import {v4} from "uuid";
-
 import './App.css';
 
-type TaskType = {
+export type TaskType = {
     id:string
     text:string
     completed:boolean
 }
 
+export type FilterType = 'all' | 'active' | 'completed';
+
 function App() {
+
+    const [filter,setFilter] = useState<FilterType>('all')
     const [tasks,setTasks] = useState<Array<TaskType>>([
         {
             id:v4(),
@@ -49,14 +53,24 @@ function App() {
         setTasks(changedTasks);
     }
 
+    const handleFilterChange = (value:FilterType) => {
+        setFilter(value)
+    }
 
-  return (
+
+    return (
     <div className="App">
         <TodoList
-            tasks={tasks}
+            tasks={filter === 'all'
+                ? tasks
+                : filter === 'completed'
+                    ? tasks.filter(task=>task.completed)
+                    : tasks.filter(task=>!task.completed)
+            }
             handleTaskStatusChange={handleTaskStatusChange}
             handleDeleteTask={handleDeleteTask}
             handleAddNewTask={handleAddNewTask}
+            handleFilterChange={handleFilterChange}
         />
     </div>
   );
@@ -64,55 +78,6 @@ function App() {
 
 export default App;
 
-type TodoListProps = {
-    tasks:Array<TaskType>
-    handleTaskStatusChange:(id:string)=>void
-    handleDeleteTask:(id:string)=>void
-    handleAddNewTask:(text:string)=>void
-}
-export const TodoList = (props:TodoListProps) => {
 
-    const [newTaskText,setNewTaskText] = useState('');
-
-    const onAddTaskClick = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        e.preventDefault()
-        props.handleAddNewTask(newTaskText);
-        setNewTaskText('');
-    };
-
-    return (
-        <div>
-            <form>
-                <input
-                    type='text'
-                    value={newTaskText}
-                    onChange={e=>setNewTaskText(e.target.value)}
-                />
-                <button
-                    onClick={e=>onAddTaskClick(e)}
-                >+</button>
-            </form>
-            <ul>
-                {props.tasks.map((task:TaskType)=>{
-                    return <li
-                        key={task.id}
-                    >
-                        <input
-                            type="checkbox"
-                            checked={task.completed}
-                            onChange={()=>props.handleTaskStatusChange(task.id)}
-                        />
-                        {task.text}
-                        <button
-                            onClick={()=>props.handleDeleteTask(task.id)}
-                        >
-                            Delete
-                        </button>
-                    </li>
-                })}
-            </ul>
-        </div>
-    )
-}
 
 
