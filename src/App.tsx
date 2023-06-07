@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {TodoList} from "./components/TodoList/TodoList";
 import {v4} from "uuid";
 import './App.css';
+import AddItemForm from "./components/AddItemForm/AddItemForm";
 
 export type TaskType = {
     id: string
@@ -16,7 +17,7 @@ export type TasksStateType = {
 export type TodoListType = {
     id: string
     title: string
-    filter: string
+    filter: FilterType
 }
 
 export type FilterType = 'all' | 'active' | 'completed';
@@ -81,7 +82,6 @@ function App() {
             text: text,
             completed: false
         }
-
         setTasks({...tasks,[todoListID]:[...tasks[todoListID],newTask]})
     }
 
@@ -100,8 +100,40 @@ function App() {
         setTodoLists(newTodoLists);
     }
 
+    const handleAddNewTodoList = (title:string) => {
+        const newListID = v4();
+        const todoList:TodoListType = {
+            id:newListID,
+            title:title,
+            filter: 'all'
+        }
+        setTodoLists([...todoLists,todoList]);
+        setTasks({...tasks,[newListID]:[]})
+    }
+
+    const handleChangeTaskTitle = (todoListID:string,taskID:string,newTitle:string) => {
+        let task = tasks[todoListID].find(task => task.id === taskID);
+        task && (task.text = newTitle);
+        setTasks({...tasks,[todoListID]: [...tasks[todoListID] ] } );
+    }
+
+    // вопрос по этой функции, как правильно изменить и засетать стэйт
+    // const handleChangeTodoListTitle = (todoListID:string,newTitle:string) => {
+    //     const targetedList = todoLists.find(list=>list.id===todoListID);
+    //     targetedList && (targetedList.title=newTitle);
+    //     setTodoLists([...todoLists,{...targetedList}])
+    //     console.log(todoLists)
+    // }
+
+    const handleChangeTodoListTitle = (todoListID:string,newTitle:string) => {
+        const targetedList = todoLists.find(list=>list.id===todoListID);
+        targetedList && (targetedList.title=newTitle);
+        setTodoLists([...todoLists])
+    }
+
     return (
         <div className="App">
+            <AddItemForm handler={handleAddNewTodoList}/>
             {todoLists.map(todoList => {
 
                 const handleFilterChange = (todoListID:string,value: FilterType) => {
@@ -119,11 +151,14 @@ function App() {
                             ? tasks[todoList.id].filter(task => task.completed)
                             : tasks[todoList.id].filter(task => !task.completed)
                     }
+                    title={todoList.title}
                     handleTaskStatusChange={handleTaskStatusChange}
                     handleDeleteTask={handleDeleteTask}
                     handleAddNewTask={handleAddNewTask}
                     handleFilterChange={handleFilterChange}
                     handleDeleteTodoList={handleDeleteTodoList}
+                    handleChangeTaskTitle={handleChangeTaskTitle}
+                    handleChangeTodoListTitle={handleChangeTodoListTitle}
                 />
             })}
         </div>
