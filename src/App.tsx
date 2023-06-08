@@ -6,7 +6,7 @@ import AddItemForm from "./components/AddItemForm/AddItemForm";
 
 export type TaskType = {
     id: string
-    text: string
+    title: string
     completed: boolean
 }
 
@@ -31,34 +31,34 @@ function App() {
         [todoListID1]: [
             {
                 id: v4(),
-                text: 'Buy some bread',
+                title: 'Buy some bread',
                 completed: false
             },
             {
                 id: v4(),
-                text: 'Feed the cat',
+                title: 'Feed the cat',
                 completed: true
             },
             {
                 id: v4(),
-                text: 'Work on the project',
+                title: 'Work on the project',
                 completed: false
             },
         ],
         [todoListID2]: [
             {
                 id: v4(),
-                text: 'Hit the gym',
+                title: 'Hit the gym',
                 completed: false
             },
             {
                 id: v4(),
-                text: 'Call dad',
+                title: 'Call dad',
                 completed: false
             },
             {
                 id: v4(),
-                text: 'Dinner in the restaurant',
+                title: 'Dinner in the restaurant',
                 completed: false
             },
         ]
@@ -79,7 +79,7 @@ function App() {
     const handleAddNewTask = (todoListID:string,text: string) => {
         const newTask: TaskType = {
             id: v4(),
-            text: text,
+            title: text,
             completed: false
         }
         setTasks({...tasks,[todoListID]:[...tasks[todoListID],newTask]})
@@ -113,7 +113,7 @@ function App() {
 
     const handleChangeTaskTitle = (todoListID:string,taskID:string,newTitle:string) => {
         let task = tasks[todoListID].find(task => task.id === taskID);
-        task && (task.text = newTitle);
+        task && (task.title = newTitle);
         setTasks({...tasks,[todoListID]: [...tasks[todoListID] ] } );
     }
 

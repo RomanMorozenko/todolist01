@@ -55,7 +55,7 @@ export const TodoList = (props: TodoListProps) => {
                             onChange={() => props.handleTaskStatusChange(props.todoListID, task.id)}
                         />
                         <EditableSpan
-                            currentTitle={task.text}
+                            currentTitle={task.title}
                             handleChangeTaskTitle={handleChangeTaskTitle}
                         />
                         <button
