@@ -1,16 +1,26 @@
-import styles from './addItemForm.module.css';
 import React, {useState} from "react";
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 
 type AddItemFormProps = {
     handler: (title:string) => void
 }
 
-const AddItemForm = (props: AddItemFormProps) => {
+const AddItemForm = React.memo((props: AddItemFormProps) => {
+    console.log('AddItemForm')
 
     const [error, setError] = useState<string | null>(null);
     const [title, setTitle] = useState<string>('');
 
-    const handleAddNewItem = (e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.KeyboardEvent<HTMLInputElement>) => {
+    const ButtonStyles = {
+        maxWidth: '38px',
+        maxHeight: '38px',
+        minWidth: '38px',
+        minHeight: '38px',
+        backgroundColor:'royalblue',
+    }
+
+    const handleAddNewItem = (e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.KeyboardEvent<HTMLDivElement>) => {
         e.preventDefault()
         if (title.trim() === '') {
             setError('Type your task...')
@@ -25,23 +35,29 @@ const AddItemForm = (props: AddItemFormProps) => {
 
     return <>
         <form>
-            <input
-                type='text'
-                value={title}
-                onChange={e => {
-                    setError(null);
-                    setTitle(e.target.value);
-                }}
-                onKeyDown={e => e.code === 'Enter' && handleAddNewItem(e)}
-                className={error ? styles.error : ''}
-            />
-            <button
-                onClick={e => handleAddNewItem(e)}
-            >+
-            </button>
+                <TextField
+                    id="outlined-basic"
+                    label="Outlined"
+                    variant="outlined"
+                    size='small'
+                    value={title}
+                    error={!!error}
+                    helperText={error}
+                    onChange={e => {
+                        setError(null);
+                        setTitle(e.target.value);
+                    }}
+                    onKeyDown={e => e.code === 'Enter' && handleAddNewItem(e)}
+                />
+                <Button
+                    style={ButtonStyles}
+                    onClick={e => handleAddNewItem(e)}
+                    variant="contained"
+                >
+                    +
+                </Button>
         </form>
-        {error ? <h4 className={styles.errorText}>{error}</h4> : <></>}
     </>
-}
+})
 
 export default AddItemForm;

@@ -3,11 +3,11 @@ import React, {useState} from "react";
 
 export type EditableSpanPropsType = {
     currentTitle: string
-    handleChangeTaskTitle:(newTitle:string)=>void
+    handleChangeTitle:(newTitle:string)=>void
 }
 
-const EditableSpan = (props: EditableSpanPropsType) => {
-
+const EditableSpan = React.memo((props: EditableSpanPropsType) => {
+    console.log('EditableSpan')
     const [editMode, setEditMode] = useState<boolean>(false);
 
     return editMode
@@ -17,13 +17,13 @@ const EditableSpan = (props: EditableSpanPropsType) => {
             }
             onKeyDown={e=>e.code === 'Enter' ? setEditMode(false) : ""}
             value={props.currentTitle}
-            onChange={e=>props.handleChangeTaskTitle(e.target.value)}
+            onChange={e=>props.handleChangeTitle(e.target.value)}
         />
         : <span
             onDoubleClick={() => setEditMode(true)}
         >
             {props.currentTitle}
          </span>
-}
+})
 
 export default EditableSpan;
