@@ -7,20 +7,27 @@ export type EditableSpanPropsType = {
 }
 
 const EditableSpan = React.memo((props: EditableSpanPropsType) => {
-    console.log('EditableSpan')
     const [editMode, setEditMode] = useState<boolean>(false);
+    const [title,setTitle] = useState<string>('')
+
+    const handleChangeTitle = () => {
+        props.handleChangeTitle(title)
+        setEditMode(false)
+    }
 
     return editMode
         ? <input
             autoFocus
-            onBlur={() => setEditMode(false)
-            }
-            onKeyDown={e=>e.code === 'Enter' ? setEditMode(false) : ""}
-            value={props.currentTitle}
-            onChange={e=>props.handleChangeTitle(e.target.value)}
+            onBlur={() => handleChangeTitle()}
+            onKeyDown={e=>e.code === 'Enter' ? handleChangeTitle() : ""}
+            value={title}
+            onChange={e=>setTitle(e.target.value)}
         />
         : <span
-            onDoubleClick={() => setEditMode(true)}
+            onDoubleClick={() => {
+                setTitle(props.currentTitle)
+                setEditMode(true)
+            }}
         >
             {props.currentTitle}
          </span>

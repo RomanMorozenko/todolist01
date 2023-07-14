@@ -7,7 +7,7 @@ type AddItemFormProps = {
 }
 
 const AddItemForm = React.memo((props: AddItemFormProps) => {
-    console.log('AddItemForm')
+    // console.log('AddItemForm')
 
     const [error, setError] = useState<string | null>(null);
     const [title, setTitle] = useState<string>('');
@@ -37,7 +37,7 @@ const AddItemForm = React.memo((props: AddItemFormProps) => {
         <form>
                 <TextField
                     id="outlined-basic"
-                    label="Outlined"
+                    label="Type a task"
                     variant="outlined"
                     size='small'
                     value={title}
